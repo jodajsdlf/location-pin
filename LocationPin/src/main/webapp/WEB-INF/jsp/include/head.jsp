@@ -27,4 +27,4 @@
         <script src="<%= request.getContextPath() %>/ui/js/vendors.bundle.js"></script>
         <script src="<%= request.getContextPath() %>/ui/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>
         <script src="<%= request.getContextPath() %>/ui/js/notifications/toastr/toastr.js"></script>
-		<script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=9df4fa9a3b118fde8138b379a431fc4b"></script>
+		
