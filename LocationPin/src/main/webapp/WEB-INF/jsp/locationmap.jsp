@@ -70,12 +70,7 @@
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9df4fa9a3b118fde8138b379a431fc4b&libraries=services"></script>
 
 <script type="text/javascript">
-// JSON 데이터가 올바르게 전달되었는지 확인 (디버깅용)
-console.log("테스트");
-console.log('list 데이터:', '${list}');
-console.log("테스트");
-
-// JSON 데이터를 안전하게 변환
+//JSON 데이터를 안전하게 변환
 var locations;
 try {
     locations = JSON.parse('${list}');
@@ -97,63 +92,50 @@ window.onload = function() {
 
     // 가게 목록을 반복하며 마커 추가
     var promises = locations.map(function(location) {
-        return new Promise(function(resolve, reject) {
-            var geocoder = new kakao.maps.services.Geocoder(); 
-            geocoder.addressSearch(location.address, function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                    var marker = new kakao.maps.Marker({
-                        position: coords,
-                        map: map
-                    });
-
-                    // infowindow를 생성
-                    var infowindow = new kakao.maps.InfoWindow();
-
-                    // 닫기 버튼을 포함한 content 설정
-                    var content = `
-                        <div style="padding:5px;font-size:14px;">
-                            <strong>${location.name}</strong><br>${location.address}
-                            <button class="btn btn-danger btn-sm" style="margin-top: 5px; cursor: pointer;" onclick="closeInfoWindow(${marker.getPosition()})">닫기</button>
-                        </div>`;
-
-                    kakao.maps.event.addListener(marker, 'click', function() {
-                        infowindow.setContent(content);
-                        infowindow.open(map, marker);
-                    });
-
-                    // 버튼 클릭 시 infowindow 닫기
-                    window.closeInfoWindow = function(position) {
-                        infowindow.close();
-                    }; 
-                    resolve(); // 성공적으로 처리된 경우 resolve 호출
-                } else {
-                    console.error("주소 변환 실패:", location.address, "상태:", status); // 실패 로그
-                    reject("주소 변환 실패: " + location.address); // 실패한 경우 reject 호출
-                }
+        return new Promise(function(resolve) {
+            var coords = new kakao.maps.LatLng(location.latitude, location.longitude);
+            var marker = new kakao.maps.Marker({
+                position: coords,
+                map: map
             });
+
+            // infowindow를 생성
+            var infowindow = new kakao.maps.InfoWindow();
+
+            // 닫기 버튼을 포함한 content 설정
+            var content = `
+                <div style="padding:5px;font-size:14px;">
+                    <strong>${location.name}</strong><br>${location.address}
+                    <button class="btn btn-danger btn-sm" style="margin-top: 5px; cursor: pointer;" onclick="closeInfoWindow(${marker.getPosition()})">닫기</button>
+                </div>`;
+
+            kakao.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+            });
+
+            // 버튼 클릭 시 infowindow 닫기
+            window.closeInfoWindow = function() {
+                infowindow.close();
+            }; 
+            resolve(); // 성공적으로 처리된 경우 resolve 호출
         });
     });
 
-    // 모든 주소 변환이 완료된 후 위치 정보 업데이트
+    // 모든 마커 추가가 완료된 후 위치 정보 업데이트
     Promise.all(promises).then(function() {
         document.getElementById('location-info').innerText = '위치 정보가 모두 로드되었습니다.';
         if (locations.length > 0) {
             var lastLocation = locations[locations.length - 1];
-            geocoder.addressSearch(lastLocation.address, function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                    map.setCenter(coords); // 마지막 위치로 지도 중심 이동
-                } else {
-                    console.error("마지막 주소 변환 실패:", lastLocation.address, "상태:", status); // 마지막 주소 변환 실패 로그
-                }
-            });
+            var coords = new kakao.maps.LatLng(lastLocation.latitude, lastLocation.longitude);
+            map.setCenter(coords); // 마지막 위치로 지도 중심 이동
         }
     }).catch(function(error) {
         console.error("전체 주소 변환 중 오류:", error); // 전체 오류 로그
         document.getElementById('location-info').innerText = '위치 정보 로드 중 오류가 발생했습니다.';
     });
 };
+
 </script>
 
 </html>

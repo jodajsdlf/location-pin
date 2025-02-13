@@ -12,4 +12,6 @@ public class LocationModel {
 	private String category;
 	private String address;
 	private String area;
+	private String latitude;
+	private String longitude;
 }
