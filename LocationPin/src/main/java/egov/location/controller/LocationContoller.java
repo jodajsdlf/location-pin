@@ -2,6 +2,8 @@ package egov.location.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import egov.cmm.ValidationForm;
 import egov.location.model.LocationModel;
 import egov.location.service.LocationService;
+import egov.page.Paging;
+import egov.page.Search;
 
 @Controller
 public class LocationContoller {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ValidationForm.class);
 
 	@Autowired
 	private LocationService locationService;
@@ -22,16 +29,27 @@ public class LocationContoller {
 	// ObjectMapper 인스턴스 생성
     ObjectMapper objectMapper = new ObjectMapper();
 
-	@GetMapping(value = "location.do")
-	public String Location(Model model) throws Exception {
-		List<LocationModel> list = locationService.selectLocation();
-		model.addAttribute("list", list);
-		return "location";
-	}
+    @GetMapping(value = "location.do")
+    public String Location(Search sch, Model model) throws Exception {
+        try {
+            List<LocationModel> list = locationService.selectLocation(sch);
+            model.addAttribute("list", list);
+
+            logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ /location.do @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+            int total = locationService.selectLocationListCnt(sch);
+            model.addAttribute("total", total);
+            model.addAttribute("paging", new Paging(sch, total));
+        } catch (Exception e) {
+            logger.error("Exception occurred in /location.do", e);
+        }
+        return "location";
+    }
+
 
 	@GetMapping(value = "locationMap.do")
-	public String locationMap(Model model) throws Exception {
-		List<LocationModel> list = locationService.selectLocation();  
+	public String locationMap(Search sch, Model model) throws Exception {
+		List<LocationModel> list = locationService.selectLocation(sch);  
 	    
 	    // JSON 문자열로 변환하여 JSP에 전달
 		objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -44,8 +62,8 @@ public class LocationContoller {
 	}
 
 	@GetMapping(value = "locationMapKke.do")
-	public String locationMapKke(Model model) throws Exception { 
-	    List<LocationModel> list = locationService.selectLocation();  
+	public String locationMapKke(Search sch, Model model) throws Exception { 
+	    List<LocationModel> list = locationService.selectLocation(sch);  
 	    
 	    // JSON 문자열로 변환하여 JSP에 전달
 	    String jsonList = objectMapper.writeValueAsString(list);
