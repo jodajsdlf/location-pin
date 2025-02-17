@@ -1,12 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egov.location.mapper.LocationMapper">
-	 
-	 
+	 	
 	 <select id="selectLocation"> 
 	 	select *
 	 	from test
 	 	where area ="청주" 
+	 </select>
+	 	 
+	  <select id="selectLocationList"> 
+	    select *
+	    from test
+	    <where>
+	        area = '청주'
+	        <if test="searchName != null">
+	            <choose>
+	                <when test="searchType == 'all'">
+	                    AND (name LIKE CONCAT('%', #{searchName}, '%')
+	                    OR category LIKE CONCAT('%', #{searchName}, '%')
+	                    OR address LIKE CONCAT('%', #{searchName}, '%'))
+	                </when>
+	                <when test="searchType == 'name'">
+	                    AND name LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	                <when test="searchType == 'category'">
+	                    AND category LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	                <when test="searchType == 'address'">
+	                    AND address LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	            </choose>
+	        </if>
+	    </where>
+	    ORDER BY num DESC
+	    LIMIT #{amount} OFFSET #{limit};
+	</select>
+	 
+	 <select id="selectLocationListCnt">
+	 	select count(*)
+	 	from test
+	 	<where>
+	        area = '청주'
+	        <if test="searchName != null">
+	            <choose>
+	                <when test="searchType == 'all'">
+	                    AND (name LIKE CONCAT('%', #{searchName}, '%')
+	                    OR category LIKE CONCAT('%', #{searchName}, '%')
+	                    OR address LIKE CONCAT('%', #{searchName}, '%'))
+	                </when>
+	                <when test="searchType == 'name'">
+	                    AND name LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	                <when test="searchType == 'category'">
+	                    AND category LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	                <when test="searchType == 'address'">
+	                    AND address LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	            </choose>
+	        </if>
+	    </where>
 	 </select>
 	 
 </mapper>

@@ -21,7 +21,17 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 	@Override
 	public List<LocationModel> selectLocation() throws Exception {
 		return mapper.selectLocation();
-	} 
+	}
+
+	@Override
+	public List<LocationModel> selectLocationList(Search sch) throws Exception {
+		return mapper.selectLocationList(sch);
+	}
+	
+	@Override
+	public int selectLocationListCnt(Search sch) throws Exception {
+		return mapper.selectLocationListCnt(sch);
+	}
 
 	
 }

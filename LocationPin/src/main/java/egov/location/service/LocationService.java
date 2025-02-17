@@ -7,5 +7,9 @@ import egov.page.Search;
 
 public interface LocationService  {
 
-	List<LocationModel> selectLocation() throws Exception; 
+	List<LocationModel> selectLocation() throws Exception;
+
+	int selectLocationListCnt(Search sch) throws Exception;
+
+	List<LocationModel> selectLocationList(Search sch) throws Exception; 
 }
