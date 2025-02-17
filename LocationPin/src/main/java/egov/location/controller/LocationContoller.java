@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import egov.location.model.LocationModel;
 import egov.location.service.LocationService;
+import egov.page.Paging;
+import egov.page.Search;
 
 @Controller
 public class LocationContoller {
@@ -22,12 +24,16 @@ public class LocationContoller {
 	// ObjectMapper 인스턴스 생성
     ObjectMapper objectMapper = new ObjectMapper();
 
-	@GetMapping(value = "location.do")
-	public String Location(Model model) throws Exception {
-		List<LocationModel> list = locationService.selectLocation();
-		model.addAttribute("list", list);
-		return "location";
-	}
+    @GetMapping(value = "location.do")
+    public String Location(Search sch, Model model) throws Exception {
+	        List<LocationModel> list = locationService.selectLocationList(sch);
+	        model.addAttribute("list", list);
+	
+	        int total = locationService.selectLocationListCnt(sch);
+	        model.addAttribute("total", total);
+	        model.addAttribute("paging", new Paging(sch, total));
+        return "location";
+    }
 
 	@GetMapping(value = "locationMap.do")
 	public String locationMap(Model model) throws Exception {
