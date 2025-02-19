@@ -16,7 +16,39 @@ $(function() {
 		}
 	}  
 	
-	const form = $('form[id ="searchPage"]');
+	$("#search-form").on("submit", function(e) {
+        e.preventDefault();
+        
+        let searchType = $('#searchType').val();
+        let searchName = $('#searchName').val();
+        
+        if (searchName === null || searchName.trim() === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: '검색어를 입력해 주세요!'
+            });
+            return;
+        }
+        
+        // searchPage 폼에 값을 설정
+        $('#formSearchType').val(searchType);
+        $('#formSearchName').val(searchName);
+        $('#formPageNum').val(1); // 검색 시 첫 페이지로 리셋
+        
+        // 폼 제출
+        document.searchPage.submit();
+    });
+
+    // 페이지네이션 클릭 이벤트
+    $(document).on("click", ".page-item", function() { 
+        let pageNum = $(this).find('.page-link').data('pagenum');
+        let nowNum = $(".page-item.active .page-link").data('pagenum');
+        if (nowNum != pageNum && pageNum > 0) {
+            $("#formPageNum").val(pageNum);
+            document.searchPage.submit();
+        }
+    });
 
 	$('#search-button').on('click', function() {
 		let searchType = $('#searchType').val();
@@ -84,40 +116,7 @@ $(function() {
 	$('#searchType').change(function() { // searchType 변경 시 설정
 		updateSearchNameField();
 	});
-
-	$(document).on("click", ".page-item", function() {
-	    let pageNum = $(this).find('.page-link').data('pagenum');
-	    let nowNum = $(".page-item.active p").data('pagenum');
 	
-	    if (nowNum != pageNum && pageNum > 0) {
-	        $("#PageNum").val(pageNum);
-	        document.forms['searchPage'].submit();
-	    }
-	});
-	
-	$("#search-form").on("submit", function(e) {
-	    e.preventDefault();
-	    
-	    let searchType = $("#searchType").val();
-	    let searchName = $("#searchName").val();
-		let pageNum = $("#pageNum").val();
-		let nowNum = $(".page-item.active p").data('pagenum');
-	
-		let url = `location.do?pageNum=${pageNum}&amount=15&searchType=${searchType}&searchName=${searchName}`;
-
-	    $.ajax({
-	        url: url,
-	        method: "GET",
-	        success: function() {
-	            window.location.href = url;
-	        },
-	        error: function(err) {
-	            console.error("검색 실패:", err);
-	        }
-	    });
-	});
-
-
 	function ajaxPost(urls, datas) {
 		$(".loader").show();
 		$.ajax({

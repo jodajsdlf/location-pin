@@ -1,8 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 <%@ include file="/WEB-INF/jsp/header.jsp"%>
-<main id="js-page-content" role="main" class="page-content">
+<main id="js-page-content" role="main" class="page-content" style="height:100%;">
 	<div class="fs-lg fw-300 p-5 bg-white border-faded rounded mb-g">
 			<div>
 				<h1 style="text-align: center;">오송 가게 목록</h1>
@@ -10,13 +9,13 @@
 			<!-- 검색 영역 -->
 			<form action="location.do" method="get" class="search-form" id="search-form">
 			    <div class="float-left input-group">
-					<select class="custom-select" id="searchType" aria-label="Default select example">
+			        <select class="custom-select" id="searchType" name="searchType">
 			            <option value="all" ${paging.sch.searchType == 'all' ? 'selected' : '' }>전체</option>
 			            <option value="name" ${paging.sch.searchType == 'name' ? 'selected' : '' }>매장명</option>
 			            <option value="category" ${paging.sch.searchType == 'category' ? 'selected' : '' }>업종</option>
 			            <option value="address" ${paging.sch.searchType == 'address' ? 'selected' : '' }>주소</option>
 			        </select> 
-			        <input type="text" class="form-control" placeholder="Search" id="searchName" value="${paging.sch.searchName}">
+			        <input type="text" class="form-control" placeholder="Search" id="searchName" name="searchName" value="${paging.sch.searchName}">
 			        <span class="input-group-append">
 			            <button class="btn btn-outline-dark" type="submit" id="search-button">
 			                <i class="fal fa-search"></i>
@@ -136,11 +135,11 @@
 	</div>
 </main>
 	 
-	 <form action="<%=request.getContextPath()%>/location.do" method="get" name="searchPage">
-		<input type="hidden" name="pageNum" id="PageNum" value="${paging.sch.pageNum}"> 
+	 <form action="<%= request.getContextPath() %>/location.do" method="get" name="searchPage">
+		<input type="hidden" name="pageNum" id="formPageNum" value="${paging.sch.pageNum}">
 		<input type="hidden" name="amount" value="${paging.sch.amount}"> 
-		<input type="hidden" name="searchType" id="SearchType" value="${paging.sch.searchType}"> 
-		<input type="hidden" name="searchName" id="SearchName" value="${spaging.sch.searchName}">
+		<input type="hidden" name="searchType" id="formSearchType" value="${paging.sch.searchType}"> 
+		<input type="hidden" name="searchName" id="formSearchName" value="${paging.sch.searchName}">
 	</form>
 	 
 	<script type="text/javascript">
@@ -152,7 +151,7 @@
 	    var optionsData = JSON.parse('${categorycode}');
 	</script>
  
-	<script type="text/javascript" src="<%= request.getContextPath() %>/js/location.js"></script>
+ 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/location.js"></script>
 </body>
 <!-- END Body -->
 </html>

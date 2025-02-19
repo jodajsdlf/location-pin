@@ -17,14 +17,13 @@
 	            <choose>
 	                <when test="searchType == 'all'">
 	                    AND (name LIKE CONCAT('%', #{searchName}, '%')
-	                    OR category LIKE CONCAT('%', #{searchName}, '%')
-	                    OR address LIKE CONCAT('%', #{searchName}, '%'))
+	                    OR category = #{searchName}
 	                </when>
 	                <when test="searchType == 'name'">
 	                    AND name LIKE CONCAT('%', #{searchName}, '%')
 	                </when>
 	                <when test="searchType == 'category'">
-	                    AND category LIKE CONCAT('%', #{searchName}, '%')
+	                    AND category = #{searchName}
 	                </when>
 	                <when test="searchType == 'address'">
 	                    AND address LIKE CONCAT('%', #{searchName}, '%')
@@ -45,14 +44,13 @@
 	            <choose>
 	                <when test="searchType == 'all'">
 	                    AND (name LIKE CONCAT('%', #{searchName}, '%')
-	                    OR category LIKE CONCAT('%', #{searchName}, '%')
-	                    OR address LIKE CONCAT('%', #{searchName}, '%'))
+	                    OR category = #{searchName}
 	                </when>
 	                <when test="searchType == 'name'">
 	                    AND name LIKE CONCAT('%', #{searchName}, '%')
 	                </when>
 	                <when test="searchType == 'category'">
-	                    AND category LIKE CONCAT('%', #{searchName}, '%')
+	                    AND category = #{searchName}
 	                </when>
 	                <when test="searchType == 'address'">
 	                    AND address LIKE CONCAT('%', #{searchName}, '%')
