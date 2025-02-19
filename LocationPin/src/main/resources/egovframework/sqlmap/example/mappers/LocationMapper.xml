@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egov.location.mapper.LocationMapper">
 	 	
-	 <select id="selectLocation"> 
+	 <select id="selecMapLocation"> 
 	 	select *
-	 	from test
-	 	where area ="청주" 
+	    from test
+	    where area = '청주'
 	 </select>
 	 	 
 	  <select id="selectLocationList"> 

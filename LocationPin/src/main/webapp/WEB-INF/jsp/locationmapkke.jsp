@@ -1,10 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 <%@ include file="/WEB-INF/jsp/header.jsp"%>
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 <style>
-/* 🔴 네이버 스타일 현재 위치 마커 */
+/* 🔴 카카오 스타일 현재 위치 마커 */
 .custom-marker {
     position: relative;
     width: 20px;
@@ -44,90 +45,85 @@
         opacity: 0;
     }
 }
+
+#map {
+    width: 100%;
+    height: 100vh; /* 화면 높이를 꽉 채우도록 설정 */
+}
 </style>
 
-<main id="js-page-content" role="main" class="page-content"
-    style="width: 100%; height: 100%;">
-    <div class="fs-lg fw-300 p-5 bg-white border-faded rounded mb-g"
-        style="width: 95%; margin: 0 auto;">
-        <div class="table-responsive">
-            <div>
-                <h1 style="text-align: center;">오송 가게 List</h1>
-            </div>   
-            <div id="map" style="width: 100%; height: 500px;"></div>
-            <div id="location-info" style="margin-top: 10px; font-size: 16px;">위치 정보를 가져오는 중...</div> 
+
+<main id="js-page-content" role="main" class="page-content" style="width: 100%; height: 100%;">
+    <div class="fs-lg fw-300  bg-white border-faded rounded mb-g" style="width: 100%; margin: 0 auto;"> 
+        <div class="table-responsive"> 
+            <div id="map"></div> 
         </div>
     </div>
 </main>
 
-<!-- 네이버 지도 API 로드 -->
-<script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=y8g7z5zn5f"></script>
+<!-- 카카오 지도 API 로드 -->
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9df4fa9a3b118fde8138b379a431fc4b&libraries=services"></script>
 
 <script type="text/javascript">
-    // JSON 데이터가 올바르게 전달되었는지 확인 (디버깅용)
-    console.log("테스트");
-    console.log('list 데이터:', '${list}');
-    console.log("테스트");
-    
-    // JSON 데이터를 안전하게 변환
-    var locations;
-    try {
-        locations = JSON.parse('${list}');
-    } catch (error) {
-        console.error("JSON 파싱 오류:", error);
-        locations = []; // 오류 발생 시 빈 배열로 설정
-    }
+// JSON 데이터를 안전하게 변환
+var locations = [];
+try {
+    locations = JSON.parse('<c:out value="${list}" escapeXml="false"/>');
+} catch (error) {
+    console.error("JSON 파싱 오류:", error);
+    locations = [];
+}
 
-    console.log('파싱된 locations:', locations);
+console.log('파싱된 locations:', locations);
 
-    // 네이버 지도 초기화
-    var map = new naver.maps.Map('map', {
-        center: new naver.maps.LatLng(36.6224007325054, 127.316534422255), // 초기 중심 위치
-        zoom: 10
-    });
+window.onload = function() {
+    // 지도 초기화
+    var mapContainer = document.getElementById('map');
+    var mapOption = {
+        center: new kakao.maps.LatLng(36.6224007325054, 127.316534422255), 
+        level: 5 
+    };
+    var map = new kakao.maps.Map(mapContainer, mapOption);
 
-    // 가게 목록을 반복하며 마커 추가
-    var promises = locations.map(function(location) {
-        return new Promise(function(resolve, reject) {
-            // 주소를 좌표로 변환
-            naver.maps.Service.geocode({
-                address: location.address
-            }, function(status, response) {
-                if (status === naver.maps.Service.Status.OK) {
-                    var coords = new naver.maps.LatLng(response.v2.addresses[0].y, response.v2.addresses[0].x);
-                    
-                    // 마커 생성
-                    var marker = new naver.maps.Marker({
-                        position: coords,
-                        map: map
+    // infowindow 객체를 하나만 선언
+    var infowindow = new kakao.maps.InfoWindow();
+
+    // 마커 클릭 시 infowindow 열기
+    locations.forEach(function(location) { 
+        var coords = new kakao.maps.LatLng(location.latitude, location.longitude);
+        var marker = new kakao.maps.Marker({
+            position: coords,
+            map: map
+        });
+
+        // 마커 클릭 시
+        kakao.maps.event.addListener(marker, 'click', function() {
+            // 기존에 열려있던 infowindow를 닫음
+            infowindow.close();
+
+            // 새로운 infowindow를 설정하고 열기
+            infowindow.setContent('<div style="padding:10px; font-size:14px; font-weight:400; height:100px; width:300px; box-sizing:border-box;">' +
+                        '<span style="font-weight: bold; font-size: 16px;">' + location.name + '</span><br>' +
+                        location.address +
+                        '<div style="text-align:right; margin-top:10px;">' +
+                            '<button class="btn btn-danger btn-sm close-btn" style="cursor:pointer;">닫기</button>' +
+                        '</div>' +
+                     '</div>');
+
+
+            infowindow.open(map, marker);
+
+            // 닫기 버튼 이벤트 바인딩
+            setTimeout(function() {
+                var closeBtn = document.querySelector('.close-btn');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        infowindow.close();
                     });
-
-                    // 마커에 정보창 추가
-                    var infowindow = new naver.maps.InfoWindow({
-                        content: `<div style="padding:5px;font-size:14px;">${location.name}<br>${location.address}</div>`
-                    });
-
-                    naver.maps.Event.addListener(marker, 'click', function() {
-                        infowindow.open(map, marker);
-                    });
-
-                    // 지도 중심 이동
-                    map.setCenter(coords);
-                    resolve(); // 성공적으로 처리된 경우 resolve 호출
-                } else {
-                    console.error("주소 변환 실패: ", location.address);
-                    reject(); // 실패한 경우 reject 호출
                 }
-            });
+            }, 100);
         });
     });
-
-    // 모든 주소 변환이 완료된 후 위치 정보 업데이트
-    Promise.all(promises).then(function() {
-        document.getElementById('location-info').innerText = '위치 정보가 모두 로드되었습니다.';
-    }).catch(function() {
-        document.getElementById('location-info').innerText = '위치 정보 로드 중 오류가 발생했습니다.';
-    });
+}
 </script>
-
 </html>

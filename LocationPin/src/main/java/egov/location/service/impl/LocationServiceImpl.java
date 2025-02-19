@@ -17,12 +17,7 @@ import egov.page.Search;
 public class LocationServiceImpl extends EgovAbstractServiceImpl implements LocationService {
 
 	@Resource
-	LocationMapper mapper;
-
-	@Override
-	public List<LocationModel> selectLocation() throws Exception {
-		return mapper.selectLocation();
-	}
+	LocationMapper mapper; 
 
 	@Override
 	public List<LocationModel> selectLocationList(Search sch) throws Exception {
@@ -37,6 +32,11 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 	@Override
 	public List<CodeModel> categoryCode() throws Exception {
 		return mapper.categoryCode();
+	}
+
+	@Override
+	public List<LocationModel> selecMapLocation() throws Exception {
+		return mapper.selecMapLocation();
 	}
 
 	
