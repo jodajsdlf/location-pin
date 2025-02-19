@@ -51,22 +51,19 @@
     height: 100vh; /* 화면 높이를 꽉 채우도록 설정 */
 }
 </style>
-
-<script>
-console.log(${searchType});
-</script>
+ 
 <main id="js-page-content" role="main" class="page-content" style="width: 100%; height: 100%;">
     <div class="fs-lg fw-300 p-2 bg-white border-faded rounded mb-g"> 
     	<!-- 검색 영역 -->
 			<form action="location.do" method="get" class="search-form" id="search-form">
-			    <div class="float-left input-group">
+			    <div class="float-left input-group"> 
 					<select class="custom-select" id="searchType" aria-label="Default select example">
-			            <option value="all" ${paging.sch.searchType == 'all' ? 'selected' : '' }>전체</option>
-			            <option value="name" ${paging.sch.searchType == 'name' ? 'selected' : '' }>매장명</option>
-			            <option value="category" ${paging.sch.searchType == 'category' ? 'selected' : '' }>업종</option>
-			            <option value="address" ${paging.sch.searchType == 'address' ? 'selected' : '' }>주소</option>
+			            <option value="all" ${sch.searchType == 'all' ? 'selected' : '' }>전체</option>
+			            <option value="name" ${sch.searchType == 'name' ? 'selected' : '' }>매장명</option>
+			            <option value="category" ${sch.searchType == 'category' ? 'selected' : '' }>업종</option>
+			            <option value="address" ${sch.searchType == 'address' ? 'selected' : '' }>주소</option>
 			        </select> 
-			        <input type="text" class="form-control" placeholder="Search" id="searchName" value="${paging.sch.searchName}">
+			        <input type="text" class="form-control" placeholder="Search" id="searchName" value="${sch.searchName}">
 			        <span class="input-group-append">
 			            <button class="btn btn-outline-dark" type="submit" id="search-button">
 			                <i class="fal fa-search"></i>
