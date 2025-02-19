@@ -14,5 +14,5 @@ public interface LocationService  {
 	
 	List<CodeModel> categoryCode() throws Exception;
 
-	List<LocationModel> selecMapLocation() throws Exception;
+	List<LocationModel> selecMapLocation(Search sch) throws Exception;
 }

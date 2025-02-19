@@ -5,7 +5,28 @@
 	 <select id="selecMapLocation"> 
 	 	select *
 	    from test
-	    where area = '청주'
+	    <where>
+	        area = '청주'
+	        <if test="searchName != null">
+	            <choose>
+	                <when test="searchType == 'all'">
+	                    AND (name LIKE CONCAT('%', #{searchName}, '%')
+	                    OR category LIKE CONCAT('%', #{searchName}, '%')
+	                    OR address LIKE CONCAT('%', #{searchName}, '%'))
+	                </when>
+	                <when test="searchType == 'name'">
+	                    AND name LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	                <when test="searchType == 'category'">
+	                    AND category LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	                <when test="searchType == 'address'">
+	                    AND address LIKE CONCAT('%', #{searchName}, '%')
+	                </when>
+	            </choose>
+	        </if>
+	        AND area='청주'
+	    </where> 
 	 </select>
 	 	 
 	  <select id="selectLocationList"> 

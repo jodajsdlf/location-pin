@@ -61,6 +61,7 @@
     </div>
 </main>
 
+
 <!-- 카카오 지도 API 로드 -->
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9df4fa9a3b118fde8138b379a431fc4b&libraries=services"></script>
 
@@ -73,8 +74,7 @@ try {
     console.error("JSON 파싱 오류:", error);
     locations = [];
 }
-
-console.log('파싱된 locations:', locations);
+ 
 
 window.onload = function() {
     // 지도 초기화
