@@ -147,5 +147,5 @@ window.onload = function() {
 }
 </script>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/locationMap.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/locationMapKke.js"></script>
 </html>
