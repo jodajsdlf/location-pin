@@ -18,6 +18,6 @@ public interface LocationMapper {
 	
 	List<CodeModel> categoryCode();
 
-	List<LocationModel> selecMapLocation();
+	List<LocationModel> selecMapLocation(Search sch);
 
 }

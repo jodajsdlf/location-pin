@@ -51,16 +51,38 @@
     height: 100vh; /* 화면 높이를 꽉 채우도록 설정 */
 }
 </style>
-
-
+ 
 <main id="js-page-content" role="main" class="page-content" style="width: 100%; height: 100%;">
-    <div class="fs-lg fw-300  bg-white border-faded rounded mb-g" style="width: 100%; margin: 0 auto;"> 
+    <div class="fs-lg fw-300 p-2 bg-white border-faded rounded mb-g"> 
+    	<!-- 검색 영역 -->
+			<form action="location.do" method="get" class="search-form" id="search-form">
+			    <div class="float-left input-group"> 
+					<select class="custom-select" id="searchType" aria-label="Default select example">
+			            <option value="all" ${sch.searchType == 'all' ? 'selected' : '' }>전체</option>
+			            <option value="name" ${sch.searchType == 'name' ? 'selected' : '' }>매장명</option>
+			            <option value="category" ${sch.searchType == 'category' ? 'selected' : '' }>업종</option>
+			            <option value="address" ${sch.searchType == 'address' ? 'selected' : '' }>주소</option>
+			        </select> 
+			        <input type="text" class="form-control" placeholder="Search" id="searchName" value="${sch.searchName}">
+			        <span class="input-group-append">
+			            <button class="btn btn-outline-dark" type="submit" id="search-button">
+			                <i class="fal fa-search"></i>
+			            </button>
+			        </span>
+			    </div>
+			</form>
+			<!-- /검색 영역 -->
         <div class="table-responsive"> 
             <div id="map"></div> 
         </div>
     </div>
 </main>
 
+<script>
+	let searchType = '${paging.sch.searchType}';
+	let searchName = '${paging.sch.searchName}';
+	var optionsData = JSON.parse('${categorycode}'); 
+</script>
 <!-- 카카오 지도 API 로드 -->
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9df4fa9a3b118fde8138b379a431fc4b&libraries=services"></script>
 
@@ -72,9 +94,7 @@ try {
 } catch (error) {
     console.error("JSON 파싱 오류:", error);
     locations = [];
-}
-
-console.log('파싱된 locations:', locations);
+} 
 
 window.onload = function() {
     // 지도 초기화
@@ -126,4 +146,6 @@ window.onload = function() {
     });
 }
 </script>
+
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/locationMap.js"></script>
 </html>

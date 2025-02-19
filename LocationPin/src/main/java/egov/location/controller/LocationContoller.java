@@ -47,30 +47,52 @@ public class LocationContoller {
     }
 
 	@GetMapping(value = "locationMap.do")
-	public String locationMap(Model model) throws Exception {
-		List<LocationModel> list = locationService.selecMapLocation();  
+	public String locationMap(Model model, Search sch) throws Exception {
+		try {
+		List<LocationModel> list = locationService.selecMapLocation(sch);   
+		model.addAttribute("sch",sch);
+		
+		// JSON 문자열로 변환하여 JSP에 전달 
+		objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		String jsonList = objectMapper.writeValueAsString(list)
+		                       .replaceAll("\\\\n", "") // 줄 바꿈 제거
+		                       .replaceAll("\\\\t", ""); // 탭 제거 
+	    model.addAttribute("list", jsonList); 
 	    
-	    // JSON 문자열로 변환하여 JSP에 전달 
-				objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-				String jsonList = objectMapper.writeValueAsString(list)
-				                       .replaceAll("\\\\n", "") // 줄 바꿈 제거
-				                       .replaceAll("\\\\t", ""); // 탭 제거 
-			    
-			    model.addAttribute("list", jsonList); 
+	    List<CodeModel> categorycode = locationService.categoryCode();
+	    String jsonString = objectMapper.writeValueAsString(categorycode);
+		System.out.println(jsonString);
+		model.addAttribute("categorycode", jsonString); 
+
+		
+		} catch (Exception e) {
+    		System.out.println(e);
+    	}
 				return "locationmap";
 	}
 
 	@GetMapping(value = "locationMapKke.do")
-	public String locationMapKke(Model model) throws Exception {  
-List<LocationModel> list = locationService.selecMapLocation();  
-	    
-	    // JSON 문자열로 변환하여 JSP에 전달 
-				objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-				String jsonList = objectMapper.writeValueAsString(list)
-				                       .replaceAll("\\\\n", "") // 줄 바꿈 제거
-				                       .replaceAll("\\\\t", ""); // 탭 제거 
-			    
-			    model.addAttribute("list", jsonList); 
+	public String locationMapKke(Model model, Search sch) throws Exception {  
+		try {
+			List<LocationModel> list = locationService.selecMapLocation(sch);   
+			model.addAttribute("sch",sch);
+			
+			// JSON 문자열로 변환하여 JSP에 전달 
+			objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			String jsonList = objectMapper.writeValueAsString(list)
+			                       .replaceAll("\\\\n", "") // 줄 바꿈 제거
+			                       .replaceAll("\\\\t", ""); // 탭 제거 
+		    model.addAttribute("list", jsonList); 
+		    
+		    List<CodeModel> categorycode = locationService.categoryCode();
+		    String jsonString = objectMapper.writeValueAsString(categorycode);
+			System.out.println(jsonString);
+			model.addAttribute("categorycode", jsonString); 
+
+			
+			} catch (Exception e) {
+	    		System.out.println(e);
+	    	}
 	    return "locationmapkke";
 	}
 
