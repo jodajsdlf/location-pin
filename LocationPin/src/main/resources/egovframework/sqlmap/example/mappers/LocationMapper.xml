@@ -62,4 +62,10 @@
 	    </where>
 	 </select>
 	 
+	 <select id="categoryCode" resultType="CodeModel">
+		 SELECT DISTINCT category
+		 FROM test
+		 WHERE area = '청주';
+	 </select>
+	 
 </mapper>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import egov.location.model.CodeModel;
 import egov.location.model.LocationModel;
 import egov.location.service.LocationService;
 import egov.page.Paging;
@@ -26,12 +27,22 @@ public class LocationContoller {
 
     @GetMapping(value = "location.do")
     public String Location(Search sch, Model model) throws Exception {
+    	try {
 	        List<LocationModel> list = locationService.selectLocationList(sch);
 	        model.addAttribute("list", list);
+	        
+	        List<CodeModel> categorycode = locationService.categoryCode();
+	        System.out.println(categorycode);
+			String jsonString = objectMapper.writeValueAsString(categorycode);
+			System.out.println(jsonString);
+			model.addAttribute("categorycode", jsonString); 
 	
 	        int total = locationService.selectLocationListCnt(sch);
 	        model.addAttribute("total", total);
 	        model.addAttribute("paging", new Paging(sch, total));
+    	} catch (Exception e) {
+    		System.out.println(e);
+    	}
         return "location";
     }
 

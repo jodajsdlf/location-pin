@@ -8,7 +8,7 @@
 <html>
     <head>
    		<meta charset="UTF-8"> 
-   		<title>card</title>
+   		<title>Cheongju Pei Ganeung Map</title>
         <meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -22,7 +22,7 @@
 		<link rel="stylesheet" media="screen, print" href="<%= request.getContextPath() %>/ui/css/notifications/toastr/toastr.css">
         <link rel="stylesheet" href="<%= request.getContextPath() %>/ui/css/demo.css">
         <link rel="stylesheet" href="<%= request.getContextPath() %>/ui/css/font/font.css">
-        <link rel="icon" type="image/png" sizes="32x32" href="<%= request.getContextPath() %>/ui/img/logo.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="<%= request.getContextPath() %>/ui/img/cj.svg">
         <!-- JavaScript -->
         <script src="<%= request.getContextPath() %>/ui/js/vendors.bundle.js"></script>
         <script src="<%= request.getContextPath() %>/ui/js/notifications/sweetalert2/sweetalert2.bundle.js"></script>

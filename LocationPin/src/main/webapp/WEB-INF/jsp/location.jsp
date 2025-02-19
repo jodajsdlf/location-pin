@@ -2,46 +2,21 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 <%@ include file="/WEB-INF/jsp/header.jsp"%>
-<script>
-$("#search-form").on("submit", function(e) {
-    e.preventDefault();
-    this.submit();
-});
-
-const form = $('form[name="searchPage"]');
-
-$(document).on("click", ".page-item", function() { 
-	let pageNum = $(this).find('.page-link').data('pagenum');
-	let nowNum = $(".page-item.active a").data('pagenum');
-
-	if (nowNum != pageNum && pageNum > 0) {
-		$("#formPageNum").val(pageNum);
-
-		// Submit the form
-		document.searchPage.submit();
-	} else {
-		return;
-	}
-});
-</script>
-
-<main id="js-page-content" role="main" class="page-content"
-	style="width: 100%; height: 100%;">
-	<div class="fs-lg fw-300 p-5 bg-white border-faded rounded mb-g"
-		style="width: 95%; margin: 0 auto;">
-		<div class="table-responsive">
+<main id="js-page-content" role="main" class="page-content">
+	<div class="fs-lg fw-300 p-5 bg-white border-faded rounded mb-g">
 			<div>
 				<h1 style="text-align: center;">오송 가게 목록</h1>
 			</div>
+			<!-- 검색 영역 -->
 			<form action="location.do" method="get" class="search-form" id="search-form">
 			    <div class="float-left input-group">
-			        <select class="custom-select" id="searchType" name="searchType">
+					<select class="custom-select" id="searchType" aria-label="Default select example">
 			            <option value="all" ${paging.sch.searchType == 'all' ? 'selected' : '' }>전체</option>
 			            <option value="name" ${paging.sch.searchType == 'name' ? 'selected' : '' }>매장명</option>
 			            <option value="category" ${paging.sch.searchType == 'category' ? 'selected' : '' }>업종</option>
 			            <option value="address" ${paging.sch.searchType == 'address' ? 'selected' : '' }>주소</option>
 			        </select> 
-			        <input type="text" class="form-control" placeholder="Search" id="searchName" name="searchName" value="${paging.sch.searchName}">
+			        <input type="text" class="form-control" placeholder="Search" id="searchName" value="${paging.sch.searchName}">
 			        <span class="input-group-append">
 			            <button class="btn btn-outline-dark" type="submit" id="search-button">
 			                <i class="fal fa-search"></i>
@@ -49,45 +24,59 @@ $(document).on("click", ".page-item", function() {
 			        </span>
 			    </div>
 			</form>
+			<!-- /검색 영역 -->
 			
-			<div class="list_box mb-1" style="display: flex; align-items: center;">
-			    <i class="fal fa-list-ul"></i>
-			    <p style="margin: 0; padding-left: 0.5rem;">검색 건수</p>
-			    <span style="color:#db0c0c; font-weight: bold; margin: 0; padding-left: 0.2rem;">${total}</span>
-			    <p style="margin: 0; padding-left: 0.2rem;">건</p>
+			<!-- 테이블 영역 -->
+			<div class="list_box">
+				<p>
+					<i class="fal fa-list-ul"></i>
+					<a>검색 건수</a>
+					<span class="point" id="point">${total}</span>
+					<a>건</a>
+				</p>
 			</div>
 			
-			<table class="table text-center table-hover" id="dataTable">
-				<colgroup>
-					<col width='8%'>
-					<col width='20%'>
-					<col width='20%'>
-					<col width='20%'> 
-				</colgroup>
-				<thead class="">
-					<tr>
-						<th>번호</th>
-						<th>매장명</th>
-						<th>업종</th> 
-						<th>주소</th> 
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="result" items="${list}">
-						<tr class="cursor-pointer datas-item" align='center'>
-							<td>${result.num}</td>
-							<td>${result.name}</td>
-							<td>${result.category}</td>  
-							<td>${result.address}</td> 
+			<div class="table-responsive">
+				<table class="table text-center table-hover" id="dataTable">
+					<colgroup>
+						<col width='8%'>
+						<col width='20%'>
+						<col width='20%'>
+						<col width='20%'> 
+					</colgroup>
+					<thead class="">
+						<tr>
+							<th>번호</th>
+							<th>매장명</th>
+							<th>업종</th> 
+							<th>주소</th> 
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table> 
+					</thead>
+					<tbody>
+						<c:if test="${total == 0}">
+					        <tr>
+					            <td colspan="6" class="no-data">
+					            	<span>데이터가 없습니다.</span>
+					            </td>
+					        </tr>
+					    </c:if>
+						<c:forEach var="result" items="${list}">
+							<tr class="cursor-pointer datas-item" align='center'>
+								<td>${result.num}</td>
+								<td>${result.name}</td>
+								<td>${result.category}</td>  
+								<td>${result.address}</td> 
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table> 
 		</div>
+		<!-- /테이블 영역 -->
 		
+		<!-- 페이징 영역 -->
 		<c:if test="${total != 0}">
 			<nav class="pagination-wrapper">
-				<ul class="pagination" style="margin-bottom: 0px; height: 35px">
+				<ul class="pagination">
 					<c:choose>
 						<c:when test="${paging.sch.pageNum != 1}">
 							<li class="page-item">
@@ -143,16 +132,27 @@ $(document).on("click", ".page-item", function() {
 				</ul>
 			</nav>
 		</c:if>
+		<!-- /페이징 영역 -->
 	</div>
 </main>
- 
-	<form action="<%= request.getContextPath() %>/location.do" method="get" name="searchPage">
-		<input type="hidden" name="pageNum" id="formPageNum" value="${paging.sch.pageNum}">
+	 
+	 <form action="<%=request.getContextPath()%>/location.do" method="get" name="searchPage">
+		<input type="hidden" name="pageNum" id="PageNum" value="${paging.sch.pageNum}"> 
 		<input type="hidden" name="amount" value="${paging.sch.amount}"> 
-		<input type="hidden" name="searchType" id="formSearchType" value="${paging.sch.searchType}"> 
-		<input type="hidden" name="searchName" id="formSearchName" value="${paging.sch.searchName}">
+		<input type="hidden" name="searchType" id="SearchType" value="${paging.sch.searchType}"> 
+		<input type="hidden" name="searchName" id="SearchName" value="${spaging.sch.searchName}">
 	</form>
+	 
+	<script type="text/javascript">
+		let pageNum = ${paging.sch.pageNum};
+		let amount = ${paging.sch.amount};
+		let searchType = '${paging.sch.searchType}';
+		let searchName = '${paging.sch.searchName}';
+	
+	    var optionsData = JSON.parse('${categorycode}');
+	</script>
  
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/location.js"></script>
 </body>
 <!-- END Body -->
 </html>

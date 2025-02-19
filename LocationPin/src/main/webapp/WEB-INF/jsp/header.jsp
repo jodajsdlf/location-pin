@@ -25,9 +25,14 @@
          <ul id="js-nav-menu" class="nav-menu"> 
             <li>
                <a href="location.do" title="Car_Data_List" style="padding: 20px 20px;"> 
-                  <span class="nav-link-text">오송 가게 List</span>
+                  <span class="nav-link-text">오송 가게 목록</span>
                </a>
-            </li>         
+            </li>    
+            <li>
+               <a href="location.do"> 
+                  <img src="ci.png" width="50">
+               </a>
+            </li>     
    			<li>
                <a href="locationMap.do" title="Car_Data_In" style="padding: 20px 20px;"> 
                   <span class="nav-link-text">현집</span>
@@ -38,12 +43,7 @@
                   <span class="nav-link-text">갱집</span>
                </a>
             </li>  
-            <li>
-               <a href="location.do"> 
-                  <img src="ci.png" width="50">
-               </a>
-            </li>
-            <li>   
+            <!-- <li>   
                <a href="location.do" title="API" style="padding: 20px 20px;"> 
                   <span class="nav-link-text">광주 가게 List</span>
                </a>
@@ -52,7 +52,7 @@
                <a href="location.do" title="API" style="padding: 20px 20px;"> 
                   <span class="nav-link-text">광주 지도</span>
                </a>
-            </li>
+            </li> -->
          </ul>
 
       </nav>
